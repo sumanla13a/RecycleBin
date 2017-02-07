@@ -8,10 +8,8 @@ var cors = require('cors');
 var jwt = require('express-jwt');
 
 global.AppRoot = path.resolve(__dirname);
-var config = require(path.join(__dirname, 'configurations/config'));
+// var config = require(path.join(__dirname, 'configurations/config'));
 var oAuth = require(path.join(__dirname, 'configurations/auth'));
-var routes = require('./routes/index');
-
 var app = express();
 
 // view engine setup
@@ -30,9 +28,16 @@ var authCheck = jwt({
   audience: oAuth.AuthO.clientID
 });
 
-app.use('/api', authCheck);
+var routes = require('./routes/index');
+var items = require('./routes/item')(authCheck);
+/*app.use('/api', function(req, res, next) {
+  if('get' === req.method.toLowerCase()) {
+    return next('route');
+  }
+  return next();
+}, authCheck);*/
 app.use('/', routes);
-
+app.use('/items', items);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
