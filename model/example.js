@@ -1,3 +1,4 @@
+'use strict';
 var path = require('path');
 
 var db = require(path.join(global.AppRoot, 'lib/db.js'));
