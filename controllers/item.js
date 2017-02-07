@@ -36,7 +36,7 @@ module.exports = {
 		.then(function(data) {
 			res.json({
 				success:1,
-				data: data._orignal
+				data: data._original
 			});
 		})
 		.catch(function(err) {

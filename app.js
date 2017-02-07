@@ -31,6 +31,7 @@ var authCheck = jwt({
 
 var routes = require('./routes/index');
 var items = require('./routes/item')(authCheck);
+var zips=require('./routes/zip')();
 /*app.use('/api', function(req, res, next) {
   if('get' === req.method.toLowerCase()) {
     return next('route');
@@ -39,6 +40,7 @@ var items = require('./routes/item')(authCheck);
 }, authCheck);*/
 app.use('/', routes);
 app.use('/items', items);
+app.use('/zips',zips);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
