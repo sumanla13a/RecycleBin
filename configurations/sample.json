@@ -1,8 +1,0 @@
-{
-	"port": 9000,
-	"db": {
-		"path": "mongodb://localhost",
-		"name": "RecycleBin"
-	},
-	"secret": "recyclebinsecret!@#$%"
-}
