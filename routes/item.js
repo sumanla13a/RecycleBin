@@ -10,6 +10,6 @@ module.exports = function(authCheck) {
 	router.post('/', authCheck, ItemCtrl.save);
 	router.get('/:id', ItemCtrl.getById);
 	router.put('/:id', authCheck, ItemCtrl.save);
-	router.delete('/:id', ItemCtrl.delete);
+	router.delete('/:id', authCheck, ItemCtrl.delete);
 	return router;
 };
