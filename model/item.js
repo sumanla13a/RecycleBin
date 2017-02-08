@@ -26,9 +26,14 @@ var coordsSchema = new Schema({
 });
 
 var itemSchema = new Schema({
-	name: {
+	fbId: {
 		type: String,
 		required: true
+	},
+	name: {
+		type: String,
+		required: true,
+		index: 'text'
 	},
 	description: {
 		type: String,
