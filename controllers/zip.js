@@ -7,7 +7,7 @@ module.exports = {
 
         Zip.aggregate([
             { '$group': { '_id': { state: '$state' } } },
-            { '$sort': { 'state': 1 } },
+            { '$sort': { '_id.state': 1 } },
             { '$project': { state: '$_id.state', '_id': 0 } }
         ]
         ).then(function (data) {
@@ -21,6 +21,7 @@ module.exports = {
             });
     },
     getCities: function (req, res, next) {
+		let cState = req.params.state || req.query.state;
 
         Zip.find({ state: cState })
             .select('city')
