@@ -1,6 +1,7 @@
 'use strict';
 var path = require('path');
 var Item = require(path.join(global.AppRoot, 'model/item'));
+var multer = require('multer');
 
 function separateQuery(query) {
 	var queryObj = {};
@@ -101,5 +102,46 @@ module.exports = {
 		.catch(function(err) {
 			return next(err);
 		});
+	},
+
+	uploading : multer({
+		onFileSizeLimit: function (file) {
+            res.json({
+                message: "Upload failed, file size too large",
+                status: MARankings.Enums.Status.FILE_TOO_LARGE
+            });
+        },
+		storage:  multer.diskStorage({
+			destination: function(req, file, callback) {
+				callback(null, './public/images')
+			},
+			filename: function(req, file, callback) {
+				callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+			}
+		}),
+  		limits: {fileSize: 2000000, files:1},
+	}).single('upl'),
+
+	postUpload:function(req, res,next){
+		console.log(req.body);
+		let id = req.body.id;
+		let imgName=req.file.fileName;
+		if(!id) {
+			return res.status(404).json({
+				success: 10,
+				error: new Error('Item not added.')
+			});
+		}
+
+		//TODO: Update the image info to the item added.
+		Item.findOneAndUpdate({ _id: id }, { img: imgName})
+		.then(function(data){
+				res.json({
+				success: 1,
+				data: data._orignal
+			});
+		}).catch(function(err){
+			return next(err);
+		});		
 	}
 };
