@@ -23,7 +23,7 @@ var coordsSchema = new Schema({
 		type: String,
 		default: 'Point'
 	}
-});
+}, {_id: false});
 
 var itemSchema = new Schema({
 	fbId: {
