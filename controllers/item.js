@@ -4,21 +4,26 @@ var Item = require(path.join(global.AppRoot, 'model/item'));
 
 function separateQuery(query) {
 	var queryObj = {};
+	var copyQuery;
+	console.log('query ....');
+	console.log(query);
 	try{
-		query = JSON.parse(query);
+		copyQuery = JSON.parse(query);
 	} catch(e) {
-		query = query;
+
+		console.log(e);
+		copyQuery = query;
 	}
-	if(query) {
-		queryObj.limit = query.limit;
-		queryObj.sort = query.sort;
-		queryObj.fields = query.field;
-		queryObj.skip = query.skip;
-		delete query.limit;
-		delete query.skip;
-		delete query.field;
-		delete query.sort;
-		queryObj.query = query;
+	if(copyQuery) {
+		queryObj.limit = copyQuery.limit;
+		queryObj.sort = copyQuery.sort;
+		queryObj.fields = copyQuery.field;
+		queryObj.skip = copyQuery.skip;
+		delete copyQuery.limit;
+		delete copyQuery.skip;
+		delete copyQuery.field;
+		delete copyQuery.sort;
+		queryObj.query = copyQuery;
 	}
 	return queryObj;
 }
@@ -27,7 +32,7 @@ module.exports = {
 	get: function(req, res, next) {
 		
 		var query = separateQuery(req.query.query);
-
+		console.log(query);
 		Item.find(query.query)
 			.skip(query.skip)
 			.limit(query.limit)
@@ -36,7 +41,7 @@ module.exports = {
 		.then(function(data) {
 			res.json({
 				success:1,
-				data: data._original
+				data: data
 			});
 		})
 		.catch(function(err) {
@@ -49,7 +54,7 @@ module.exports = {
 		.then(function(data) {
 			res.json({
 				success: 1,
-				data: data._orignal
+				data: data
 			});
 		})
 		.catch(function(err) {
@@ -64,14 +69,13 @@ module.exports = {
 			doc.id = id;
 		}
 		let item = new Item(doc);
-
 		item.validate().then(function(){
 			return item.save(doc);
 		})
 		.then(function(data) {
 			res.json({
 				success: 1,
-				data: data._orignal
+				data: data
 			});
 		})
 		.catch(function(err) {
@@ -89,7 +93,10 @@ module.exports = {
 		}
 		Item.remove({id: id})
 		.then(function(data) {
-			res.json(new Response(1, data));
+			res.json({
+				status: 1,
+				data: data
+			});
 		})
 		.catch(function(err) {
 			return next(err);

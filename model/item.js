@@ -14,6 +14,17 @@ var contactSchema = new Schema({
 	}
 }, {_id: false});
 
+var coordsSchema = new Schema({
+	coordinates: {
+		type: [Number],
+		required: true
+	},
+	type: {
+		type: String,
+		default: 'Point'
+	}
+});
+
 var itemSchema = new Schema({
 	name: {
 		type: String,
@@ -41,8 +52,7 @@ var itemSchema = new Schema({
 		required: true
 	},
 	coords: {
-		type: [Number],
-		required: true
+		type: coordsSchema
 	},
 	img: {
 		type: String
