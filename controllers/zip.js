@@ -21,19 +21,22 @@ module.exports = {
             });
     },
     getCities: function (req, res, next) {
-		let cState = req.params.state || req.query.state;
+        let cState = req.params.state || req.query.state;
 
-        Zip.find({ state: cState })
-            .select('city')
-            .then(function (data) {
-                res.json({
-                    success: 1,
-                    cities: data
-                });
+        Zip.aggregate([
+            { $match: { state: cState } },
+            { '$group': { '_id': { state: '$state', city: '$city' } } },
+            { $project: { city: '$_id.city', _id: 0 } },
+            { $sort: { 'city': 1 } }
+
+        ]).then(function (data) {
+            res.json({
+                success: 1,
+                cities: data
             })
+        })
             .catch(function (err) {
                 return next(err);
-            });
-
+            })
     }
 };
