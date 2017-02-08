@@ -11,6 +11,6 @@ module.exports = function(authCheck) {
 	router.get('/:id', ItemCtrl.getById);
 	router.put('/:id', authCheck, ItemCtrl.save);
 	router.delete('/:id', authCheck, ItemCtrl.delete);
-	router.post('/upload',ItemCtrl.uploading, ItemCtrl.postUpload);
+	router.post('/upload', ItemCtrl.uploading, ItemCtrl.postUpload);
 	return router;
 };

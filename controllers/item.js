@@ -6,13 +6,9 @@ var multer = require('multer');
 function separateQuery(query) {
 	var queryObj = {};
 	var copyQuery;
-	console.log('query ....');
-	console.log(query);
 	try{
 		copyQuery = JSON.parse(query);
 	} catch(e) {
-
-		console.log(e);
 		copyQuery = query;
 	}
 	if(copyQuery) {
@@ -33,7 +29,7 @@ module.exports = {
 	get: function(req, res, next) {
 		
 		var query = separateQuery(req.query.query);
-		console.log(query);
+		//console.log(query);
 		Item.find(query.query)
 			.skip(query.skip)
 			.limit(query.limit)
@@ -103,7 +99,6 @@ module.exports = {
 			return next(err);
 		});
 	},
-
 	uploading : multer({
 		onFileSizeLimit: function (file) {
             res.json({
@@ -116,16 +111,15 @@ module.exports = {
 				callback(null, './public/images')
 			},
 			filename: function(req, file, callback) {
-				callback(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+				callback(null, 'prod-' + Date.now() + path.extname(file.originalname))
 			}
 		}),
   		limits: {fileSize: 2000000, files:1},
-	}).single('upl'),
-
+	}).array("uploads[]"),
+//	uploading: multer({dest: path.join(global.AppRoot, 'public/images')}).array("uploads[]"),
 	postUpload:function(req, res,next){
-		console.log(req.body);
-		let id = req.body.id;
-		let imgName=req.file.fileName;
+		let id = req.body.userId;
+		let imgName=req.files[0].filename;
 		if(!id) {
 			return res.status(404).json({
 				success: 10,
@@ -133,7 +127,6 @@ module.exports = {
 			});
 		}
 
-		//TODO: Update the image info to the item added.
 		Item.findOneAndUpdate({ _id: id }, { img: imgName})
 		.then(function(data){
 				res.json({
