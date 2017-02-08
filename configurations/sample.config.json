@@ -4,5 +4,7 @@
 		"path": "mongodb://localhost",
 		"name": "RecycleBin"
 	},
-	"secret": "recyclebinsecret!@#$%"
+	"secret": "recyclebinsecret!@#$%",
+	"email": "cs544Test@gmail.com",
+	"secret": "PA$$W0RD"
 }

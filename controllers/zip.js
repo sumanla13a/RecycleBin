@@ -33,10 +33,10 @@ module.exports = {
             res.json({
                 success: 1,
                 cities: data
-            })
+            });
         })
-            .catch(function (err) {
-                return next(err);
-            })
+        .catch(function (err) {
+            return next(err);
+        });
     }
 };

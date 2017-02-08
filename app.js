@@ -10,6 +10,8 @@ var jwt = require('express-jwt');
 global.AppRoot = path.resolve(__dirname);
 // var config = require(path.join(__dirname, 'configurations/config'));
 var oAuth = require(path.join(__dirname, 'configurations/auth'));
+var job = require(path.join(__dirname, 'lib/cronjob'));
+job.start();
 var app = express();
 
 // view engine setup
