@@ -33,6 +33,9 @@ var itemSchema = new Schema({
 		type: String,
 		required: true
 	},
+	deleted: {
+		type: Boolean
+	},
 	name: {
 		type: String,
 		required: true,

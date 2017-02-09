@@ -11,7 +11,7 @@ global.AppRoot = path.resolve(__dirname);
 // var config = require(path.join(__dirname, 'configurations/config'));
 var oAuth = require(path.join(__dirname, 'configurations/auth'));
 var job = require(path.join(__dirname, 'lib/cronjob'));
-job.start();
+// job.start();
 var app = express();
 
 // view engine setup
@@ -24,18 +24,34 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/image",express.static(path.join(__dirname, '/public/images')));
+app.use('/image',express.static(path.join(__dirname, '/public/images')));
 app.use(cors());
  
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 var authCheck = jwt({
   secret: oAuth.AuthO.clientSecret,
   audience: oAuth.AuthO.clientID
 });
+
+function getJWTToken(req) {
+  var parts = req.headers.authorization.split(' ');
+  if (parts.length == 2) {
+    var scheme = parts[0];
+    var credentials = parts[1];
+    if (/^Bearer$/i.test(scheme)) {
+      return credentials;
+    }
+  }
+  return false;
+}
+/*app.use(function(req, res, next) {
+  console.log(req);
+  next();
+});*/
 
 var routes = require('./routes/index');
 var items = require('./routes/item')(authCheck);
