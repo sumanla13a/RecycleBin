@@ -5,6 +5,9 @@ var db = require(path.join(global.AppRoot, 'lib/db.js'));
 var Schema = db.Schema;
 
 var contactSchema = new Schema({
+	name: {
+		type: String
+	},
 	email: {
 		type: String,
 		required: true
@@ -29,6 +32,9 @@ var itemSchema = new Schema({
 	fbId: {
 		type: String,
 		required: true
+	},
+	deleted: {
+		type: Boolean
 	},
 	name: {
 		type: String,

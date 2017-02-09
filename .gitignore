@@ -3,3 +3,4 @@ configurations/config.json
 **/.DS_Store
 views/testUpload.jade
 public/backupImages/*
+
