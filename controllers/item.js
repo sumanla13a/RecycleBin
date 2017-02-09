@@ -65,6 +65,7 @@ module.exports = {
 		if(id) {
 			doc.id = id;
 		}
+		doc.img="noImage.png";
 		let item = new Item(doc);
 		item.validate().then(function(){
 			return item.save(doc);
