@@ -24,47 +24,35 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/image',express.static(path.join(__dirname, '/public/images')));
+app.use('/images',express.static(path.join(__dirname, 'public/images')));
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'dist')));
+
  
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
+
+
 var authCheck = jwt({
   secret: oAuth.AuthO.clientSecret,
   audience: oAuth.AuthO.clientID
 });
 
-function getJWTToken(req) {
-  var parts = req.headers.authorization.split(' ');
-  if (parts.length == 2) {
-    var scheme = parts[0];
-    var credentials = parts[1];
-    if (/^Bearer$/i.test(scheme)) {
-      return credentials;
-    }
-  }
-  return false;
-}
-/*app.use(function(req, res, next) {
-  console.log(req);
-  next();
-});*/
 
 var routes = require('./routes/index');
 var items = require('./routes/item')(authCheck);
 var zips=require('./routes/zip')();
-/*app.use('/api', function(req, res, next) {
-  if('get' === req.method.toLowerCase()) {
-    return next('route');
-  }
-  return next();
-}, authCheck);*/
-app.use('/', routes);
-app.use('/items', items);
+
+// app.use('/', routes);
+app.use('/item', items);
 app.use('/zips',zips);
+app.use(function(req, res, next) {
+    return res.status(200).sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

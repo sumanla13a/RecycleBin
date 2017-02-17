@@ -27,10 +27,19 @@ function separateQuery(query) {
 
 module.exports = {
 	get: function(req, res, next) {
-		
-		var query = separateQuery(req.query.query);
+		var query = separateQuery(req.query.query) || {
+			query: {
+				skip: 0,
+				limit: 10
+			}
+		};
+		if(!query.query) {
+			query.query = {
+				skip: 0,
+				limit: 10
+			};
+		}
 		query.query.deleted = {$not: {$eq: true}};
-		//console.log(query);
 		Item.find(query.query)
 			.skip(query.skip)
 			.limit(query.limit)
@@ -67,7 +76,7 @@ module.exports = {
 			doc._id = id;
 		}
 		
-		doc.img="noImage.png";
+		doc.img='noImage.png';
 		let item = new Item(doc);
 		item.validate().then(function(){
 			return item.save(doc);
@@ -92,7 +101,6 @@ module.exports = {
 			});
 		}
 		Item.findOne({_id: id}).then(function(data) {
-			// if(data.contact.fbId)
 			if(req.user.sub === data.fbId) {
 				return Item.remove({id: id});
 			} else {
